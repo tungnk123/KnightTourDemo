@@ -1,0 +1,35 @@
+﻿<Window x:Class="KnightTour.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KnightTour"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Bàn cờ -->
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0">
+            <Canvas x:Name="ChessboardCanvas" Background="White" />
+        </Border>
+
+        <!-- Phần cài đặt và điều khiển -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="Cài đặt" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+            <StackPanel>
+                <TextBlock Text="Kích thước bàn cờ:"/>
+                <TextBox x:Name="BoardSizeTextBox" Width="50" Margin="0,0,0,10"/>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Vị trí ban đầu (x,y):"/>
+                <TextBox x:Name="StartPositionTextBox" Width="100" Margin="0,0,0,10"/>
+            </StackPanel>
+            <Button Content="Bắt đầu" Click="StartButton_Click" Margin="0,0,0,10"/>
+            <Button Content="Reset" Click="ResetButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
