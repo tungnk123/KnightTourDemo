@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace KnightTour
 {
@@ -7,30 +9,65 @@ namespace KnightTour
     {
         private int boardSize;
         private int startX, startY;
+        public Board board;
 
         public MainWindow()
         {
             InitializeComponent();
+            board = new Board(boardSize);
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            // Xử lý khi nhấn nút Bắt đầu
-            if (int.TryParse(BoardSizeTextBox.Text, out boardSize) && int.TryParse(StartPositionTextBox.Text, out startX))
+            boardSize = Int32.Parse(BoardSizeTextBox.Text);
+            KhoiTaoBanCo(boardSize);
+        }
+
+        private void KhoiTaoBanCo(int size)
+        {
+            for (int i = 0; i < size; i++)
             {
-                // Gọi hàm xử lý mã đi tuần với thông số boardSize, startX, startY
-                // Code xử lý mã đi tuần ở đây
+                ColumnDefinition columnDefinition = new ColumnDefinition();
+                RowDefinition rowDefinition = new RowDefinition();
+                ChessboardGrid.ColumnDefinitions.Add(columnDefinition);
+                ChessboardGrid.RowDefinitions.Add(rowDefinition);
             }
-            else
+            board = new Board(boardSize);
+            for (int i = 0; i < size; i++)
             {
-                MessageBox.Show("Nhập thông số không hợp lệ!");
+                for (int j = 0; j < size; j++) {
+                    if (((i + j) % 2) == 0)
+                    {
+                        board.Cells[i, j].Background = new SolidColorBrush(
+                            Color.FromRgb(
+                                Convert.ToByte(0xF1), // Red component
+                                Convert.ToByte(0xE0), // Green component
+                                Convert.ToByte(0xC0)  // Blue component
+                            )
+                        );
+
+                    }
+                    else
+                    {
+                        board.Cells[i, j].Background = new SolidColorBrush(
+                            Color.FromRgb(
+                                Convert.ToByte(0x5D), // Red component
+                                Convert.ToByte(0x99), // Green component
+                                Convert.ToByte(0x48)  // Blue component
+                            )
+                        );
+                    }
+                    Grid.SetRow(board.Cells[i, j], i);
+                    Grid.SetColumn(board.Cells[i, j], j);
+                    ChessboardGrid.Children.Add(board.Cells[i, j]);
+                }
             }
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
             // Xử lý khi nhấn nút Reset
-            ChessboardCanvas.Children.Clear();
+            ChessboardGrid.Children.Clear();
             BoardSizeTextBox.Text = "";
             StartPositionTextBox.Text = "";
         }
