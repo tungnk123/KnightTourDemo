@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace KnightTour
 {
@@ -20,6 +21,8 @@ namespace KnightTour
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             boardSize = Int32.Parse(BoardSizeTextBox.Text);
+            startX = Int32.Parse(StartXTextBox.Text);
+            startY = Int32.Parse(StartYTextBox.Text);
             KhoiTaoBanCo(boardSize);
         }
 
@@ -62,6 +65,27 @@ namespace KnightTour
                     ChessboardGrid.Children.Add(board.Cells[i, j]);
                 }
             }
+            // Setup con ngua
+            Image img = new Image();
+            img.HorizontalAlignment = HorizontalAlignment.Stretch;
+            img.VerticalAlignment = VerticalAlignment.Stretch;
+
+            try
+            {
+                // Assuming the image is in a folder named "Resources" in your project
+                img.Source = new BitmapImage(new Uri("Resources/knight.png", UriKind.Relative));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading image: {ex.Message}");
+            }
+
+
+
+            board.Cells[startX, startY].Children.Add(img);
+
+            board.Cells[startX, startY].IsVisited = true;
+
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
@@ -69,7 +93,8 @@ namespace KnightTour
             // Xử lý khi nhấn nút Reset
             ChessboardGrid.Children.Clear();
             BoardSizeTextBox.Text = "";
-            StartPositionTextBox.Text = "";
+            StartXTextBox.Text = "";
+            StartYTextBox.Text = "";
         }
     }
 }
