@@ -25,11 +25,8 @@
         </Grid.ColumnDefinitions>
 
         <!--  Bàn cờ  -->
-        <Border
-            Grid.Column="0"
-            BorderBrush="Black"
-            BorderThickness="1">
-            <Canvas x:Name="ChessboardCanvas" Background="White" />
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0">
+            <Grid x:Name="ChessboardGrid" Background="AliceBlue" Margin="30, 30, 30, 30" Height="500" Width="500"/>
         </Border>
 
         <!--  Phần cài đặt và điều khiển  -->
@@ -68,6 +65,7 @@
 
                         <!--  Phần tử con thứ hai  -->
                         <ComboBox
+                            x:Name="ChessboardSizeComboBox"
                             Grid.Column="1"
                             Width="auto"
                             Margin="0,5,15,5"
@@ -75,7 +73,7 @@
                             materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
                             BorderThickness="0"
                             FontSize="11">
-                            <ComboBoxItem Content="Android" />
+                            <ComboBoxItem Content="3" />
                             <ComboBoxItem Content="iOS" />
                             <ComboBoxItem Content="Linux" />
                             <ComboBoxItem Content="Windows" />
@@ -110,13 +108,14 @@
                                 Grid.Column="0"
                                 Width="auto"
                                 Height="AUTO"
-                            Margin="6"
+                                Margin="6"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Kind="ArrowUpDown" />
 
                             <!--  Phần tử con thứ hai  -->
                             <ComboBox
+                                x:Name="StartPointXComboBox"
                                 Grid.Column="1"
                                 Width="auto"
                                 Margin="0,5,15,5"
@@ -156,13 +155,14 @@
                                 Grid.Column="0"
                                 Width="auto"
                                 Height="AUTO"
-                            Margin="6"
+                                Margin="6"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Kind="ArrowLeftRight" />
 
                             <!--  Phần tử con thứ hai  -->
                             <ComboBox
+                                x:Name="StartPointYComboBox"
                                 Grid.RowSpan="2"
                                 Grid.Column="1"
                                 Width="auto"
@@ -191,7 +191,7 @@
                     Background="#5d9948"
                     IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
+                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners" Click="StartButton_Click">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -208,20 +208,23 @@
                 </Button>
             </Grid>
 
-            <StackPanel Height="80" Margin="0,20,0,0" VerticalAlignment="Center">
+            <StackPanel
+                Height="80"
+                Margin="0,20,0,0"
+                VerticalAlignment="Center">
                 <TextBlock
-                    TextAlignment="Center"
                     Margin="0,0,0,10"
                     FontWeight="Bold"
-                    Text="Có tất cả {} cách chạy" />
-                <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                    Text="Có tất cả {} cách chạy"
+                    TextAlignment="Center" />
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Border
-                    Width="120"
-                    Margin="0,0,0,0"
-                    Background="#E6E0E9"
-                    BorderBrush="Black"
-                    BorderThickness="0"
-                    CornerRadius="5">
+                        Width="120"
+                        Margin="0,0,0,0"
+                        Background="#E6E0E9"
+                        BorderBrush="Black"
+                        BorderThickness="0"
+                        CornerRadius="5">
                         <Grid Width="auto">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -232,23 +235,23 @@
 
                             <!--  Phần tử con thứ nhất  -->
                             <materialDesign:PackIcon
-                            Grid.Column="0"
-                            Width="auto"
-                            Height="AUTO"
-                            Margin="6"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Kind="ArrowDecision" />
+                                Grid.Column="0"
+                                Width="auto"
+                                Height="AUTO"
+                                Margin="6"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Kind="ArrowDecision" />
 
                             <!--  Phần tử con thứ hai  -->
                             <ComboBox
-                            Grid.Column="1"
-                            Width="auto"
-                            Margin="0,5,15,5"
-                            materialDesign:HintAssist.Hint="Cách chạy"
-                            materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
-                            BorderThickness="0"
-                            FontSize="11">
+                                Grid.Column="1"
+                                Width="auto"
+                                Margin="0,5,15,5"
+                                materialDesign:HintAssist.Hint="Cách chạy"
+                                materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                BorderThickness="0"
+                                FontSize="11">
                                 <ComboBoxItem Content="Android" />
                                 <ComboBoxItem Content="iOS" />
                                 <ComboBoxItem Content="Linux" />
@@ -257,14 +260,14 @@
                         </Grid>
                     </Border>
                     <Button
-                    Width="120"
-                    Height="35"
-                    Margin="10,0,0,0"
-                    materialDesign:ButtonAssist.CornerRadius="20"
-                    Background="#5d9948"
-                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
+                        Width="120"
+                        Height="35"
+                        Margin="10,0,0,0"
+                        materialDesign:ButtonAssist.CornerRadius="20"
+                        Background="#5d9948"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -272,9 +275,9 @@
                             </Grid.ColumnDefinitions>
                             <materialDesign:PackIcon Foreground="Black" Kind="PlayOutline" />
                             <TextBlock
-                            Grid.Column="1"
-                            Margin="5,0,0,0"
-                            Text="Minh họa" />
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Text="Minh họa" />
 
                         </Grid>
 
@@ -285,9 +288,9 @@
             </StackPanel>
 
 
-            
 
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                 <ToggleButton
                     Width="60"
                     Style="{StaticResource MaterialDesignSwitchToggleButton}"
@@ -307,21 +310,21 @@
 
             </StackPanel>
 
-            <StackPanel Margin="0,10,0,0" >
+            <StackPanel Margin="0,10,0,0">
                 <TextBlock
                     Margin="0,0,0,5"
                     FontWeight="Bold"
                     Text="Thông tin chi tiết về việc chạy" />
 
                 <TextBox
-    Height="100"
-    VerticalAlignment="Top"
-    materialDesign:HintAssist.Hint="Thông tin các bước chạy sẽ hiển thị ở đây"
-    AcceptsReturn="True"
-    IsEnabled="{Binding Path=IsChecked, ElementName=MaterialDesignOutlinedTextBoxEnabledComboBox}"
-    Style="{StaticResource MaterialDesignOutlinedTextBox}"
-    TextWrapping="Wrap"
-    VerticalScrollBarVisibility="Auto" />
+                    Height="100"
+                    VerticalAlignment="Top"
+                    materialDesign:HintAssist.Hint="Thông tin các bước chạy sẽ hiển thị ở đây"
+                    AcceptsReturn="True"
+                    IsEnabled="{Binding Path=IsChecked, ElementName=MaterialDesignOutlinedTextBoxEnabledComboBox}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Auto" />
             </StackPanel>
 
         </StackPanel>
