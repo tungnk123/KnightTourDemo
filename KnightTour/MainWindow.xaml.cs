@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,19 +12,66 @@ namespace KnightTour
         private int boardSize;
         private int startX, startY;
         public Board board;
-
+        public int[,] visited;
+        static int[] rowDir = { 2, 1, -1, -2, -2, -1, 1, 2 };
+        static int[] colDir = { 1, 2, 2, 1, -1, -2, -2, -1 };
+        public List<int[,]> ansList;
         public MainWindow()
         {
             InitializeComponent();
             board = new Board(boardSize);
+            ansList = new List<int[,]>();
         }
 
+        public void ChayMaDiTuan(int i, int curRow, int curCol, int n, int[,] visited)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                int newRow = curRow + rowDir[j];
+                int newCol = curCol + colDir[j];
+
+                // Check xem o (newRow, newCol) co hop le hay khong
+                if (IsValid(newRow, newCol, n, visited))
+                {
+                    visited[newRow, newCol] = i;
+                    // i bat dau la 1
+                    if (i == n * n)
+                    {
+                        // Luu vao tap ket qua
+                        ansList.Add(visited);
+                    }
+                    else
+                    {
+                        ChayMaDiTuan(i + 1, newRow, newCol, n, visited);
+                    }
+                    visited[newRow,newCol] = 0;
+                }
+            }
+        }
+
+        public bool IsValid(int row, int col, int n, int[,] visited)
+        {
+            if (row < 0 || row >= n || col < 0 || col >= n || visited[row, col] != 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void KhoiChayConNgua()
+        {
+
+        }
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             boardSize = Int32.Parse(ChessboardSizeComboBox.Text);
             startX = Int32.Parse(StartPointXComboBox.Text);
             startY = Int32.Parse(StartPointYComboBox.Text);
+            board = new Board(boardSize);
+            visited = new int[boardSize, boardSize];
+            visited[startX, startY] = -1;
             KhoiTaoBanCo(boardSize);
+            ChayMaDiTuan(1, startX, startY, boardSize, visited);
         }
 
         private void KhoiTaoBanCo(int size)
