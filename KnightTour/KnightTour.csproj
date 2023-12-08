@@ -16,10 +16,14 @@
 
   <ItemGroup>
     <None Remove="pngtree-black-chess-knight-horse-stallion-png-image_8864303.png" />
+    <None Remove="Resources\go.png" />
     <None Remove="Resources\knight.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\go.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\knight.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

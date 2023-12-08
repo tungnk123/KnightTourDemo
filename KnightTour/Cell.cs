@@ -8,6 +8,14 @@ namespace KnightTour
         private bool isWhite;
         private bool _isVisited;
         private int number;
+        public int Number
+        {
+            get { return number; }
+            set
+            {
+                number = value;
+            }
+        }
 
         public bool IsVisited
         {
@@ -18,8 +26,7 @@ namespace KnightTour
                 if (value)
                 {
                     // Set the background color to blue
-                    this.Background = new SolidColorBrush(Colors.Blue);
-
+                    this.Background = new SolidColorBrush(Colors.Gray);
                     // Add a TextBlock with the number to the cell
                     TextBlock textBlock = new TextBlock();
                     textBlock.Text = number.ToString();

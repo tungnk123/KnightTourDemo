@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -25,7 +26,11 @@ namespace KnightTour
 
         public void ChayMaDiTuan(int i, int curRow, int curCol, int n, int[,] visited)
         {
-            for (int j = 0; j < n; j++)
+            if (ansList.Count >= 1000 || (boardSize == 8 && ansList.Count == 2))
+            {
+                return;
+            }
+            for (int j = 0; j < 8; j++)
             {
                 int newRow = curRow + rowDir[j];
                 int newCol = curCol + colDir[j];
@@ -34,11 +39,15 @@ namespace KnightTour
                 if (IsValid(newRow, newCol, n, visited))
                 {
                     visited[newRow, newCol] = i;
+                    
                     // i bat dau la 1
-                    if (i == n * n)
+                    if (i == n * n - 1)
                     {
                         // Luu vao tap ket qua
-                        ansList.Add(visited);
+                        int[,] solution = new int[visited.GetLength(0), visited.GetLength(1)];
+                        Array.Copy(visited, solution, visited.Length);
+                        ansList.Add(solution);
+
                     }
                     else
                     {
@@ -58,20 +67,198 @@ namespace KnightTour
             return true;
         }
 
-        public void KhoiChayConNgua()
+        private async void KhoiChayConNgua(int truongHopI)
         {
+            try
+            {
+                int[,] dapAnThuI = ansList[truongHopI - 1];
+                int i = 1;
+                // Xy ly truong hop di dau tien
+                TextBlock textBlock = new TextBlock();
+                textBlock.FontSize = 15;
+                textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                textBlock.VerticalAlignment = VerticalAlignment.Center;
+                textBlock.Height = 20;
+                int[] toaDoThuNhat = SearchToaDo(i, dapAnThuI);
+                textBlock.Text = $"Bước 0:    Đi từ ({startX}, {startY}) đến ({toaDoThuNhat[0]}, {toaDoThuNhat[1]})";
+                ResultStackPanel.Children.Add(textBlock);
 
+
+                while (i != boardSize * boardSize)
+                {
+                    await ChuyenToaDoMa(i, dapAnThuI);
+                    textBlock = new TextBlock();
+                    textBlock.FontSize = 15;
+                    textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                    textBlock.VerticalAlignment = VerticalAlignment.Center;
+                    int[] toaDoHienTai = SearchToaDo(i, dapAnThuI);
+                    if (i + 1 == boardSize * boardSize)
+                    {
+                        break;
+                    }
+                    int[] toaDoTiepTheo = SearchToaDo(i + 1, dapAnThuI);
+                    textBlock.Text = $"Bước {i}:    Đi từ ({toaDoHienTai[0]}, {toaDoHienTai[1]}) đến ({toaDoTiepTheo[0]}, {toaDoTiepTheo[1]})";
+                    ResultStackPanel.Children.Add(textBlock);
+                    i++;
+                    await Task.Delay(500);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Lựa chọn không hợp lệ!");
+            }
+        }
+
+        private int[] SearchToaDo(int key, int[,] dapAnThuI)
+        {
+            int[] ans = new int[2];
+            for (int i = 0; i < boardSize; i++)
+            {
+                for (int j = 0; j < boardSize; j++)
+                {
+                    if (dapAnThuI[i, j] == key)
+                    {
+                        return new int[] { i, j };
+                    }
+                }
+            }
+            return ans;
+        }
+
+        private async Task ChuyenToaDoMa(int k, int[,] dapAnThuI)
+        {
+            for (int i = 0; i < boardSize; i++)
+            {
+                for (int j = 0; j < boardSize; j++)
+                {
+                    if (dapAnThuI[i, j] == k)
+                    {
+                        board.Cells[i, j].Number = k;
+                        board.Cells[i, j].IsVisited = true;
+                        Image img = new Image();
+                        img.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        img.VerticalAlignment = VerticalAlignment.Stretch;
+
+                        try
+                        {
+                            // Assuming the image is in a folder named "Resources" in your project
+                            img.Source = new BitmapImage(new Uri("Resources/knight.png", UriKind.Relative));
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error loading image: {ex.Message}");
+                        }
+                        board.Cells[i, j].Children.Add(img);
+                        await Task.Delay(500);
+                        board.Cells[i, j].Children.Remove(img);
+                        return;
+                    }
+                }
+            }
+        }
+        public void AddStartName()
+        {
+            Image img = new Image();
+            img.HorizontalAlignment = HorizontalAlignment.Stretch;
+            img.VerticalAlignment = VerticalAlignment.Stretch;
+
+            try
+            {
+                // Assuming the image is in a folder named "Resources" in your project
+                img.Source = new BitmapImage(new Uri("Resources/go.png", UriKind.Relative));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading image: {ex.Message}");
+            }
+
+            board.Cells[startX, startY].Children.Add(img);
         }
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            boardSize = Int32.Parse(ChessboardSizeTextBox.Text);
-            startX = Int32.Parse(StartPointXTextBox.Text);
-            startY = Int32.Parse(StartPointYTextBox.Text);
-            board = new Board(boardSize);
+            try
+            {
+                boardSize = Int32.Parse(ChessboardSizeTextBox.Text);
+                startX = Int32.Parse(StartPointXTextBox.Text);
+                startY = Int32.Parse(StartPointYTextBox.Text);
+                board = new Board(boardSize);
+
+
+                visited = new int[boardSize, boardSize];
+                visited[startX, startY] = -1;
+                AddStartName();
+                ResetChessBoard();
+                KhoiTaoBanCo(boardSize);
+                //board.Cells[startX, startY].Background = new SolidColorBrush(Colors.Blue);
+                AddStartName();
+                ChayMaDiTuan(1, startX, startY, boardSize, visited);
+                if (ansList.Count < 1000)
+                {
+                    CachChayTextBox.Text = "Có tất cả " + ansList.Count + " cách chạy";
+                }
+                else
+                {
+                    CachChayTextBox.Text = "Đã chạy được " + ansList.Count + " cách chạy";
+                }
+                if (boardSize >= 8)
+                {
+                    ThongBaoTextBox.Text = "(Cho dừng thuật toán khi tập kết quả > 2)";
+                }
+                else
+                {
+                    ThongBaoTextBox.Text = "(Cho dừng thuật toán khi tập kết quả > 1000)";
+                }
+                AddStartName();
+            }
+            catch
+            {
+                MessageBox.Show("Vui lòng nhập thông tin hợp lệ!");
+            }
+        }
+
+        private void MinhHoaButton_Click(object sender, RoutedEventArgs e)
+        {
+            ResultStackPanel.Children.Clear();
             visited = new int[boardSize, boardSize];
             visited[startX, startY] = -1;
-            KhoiTaoBanCo(boardSize);
-            ChayMaDiTuan(1, startX, startY, boardSize, visited);
+            for (int i = 0; i < boardSize; i++)
+            {
+                for (int j = 0; j < boardSize; j++)
+                {
+                    board.Cells[i, j].IsVisited = false;
+                }
+            }
+            for (int i = 0; i < boardSize; i++)
+            {
+                for (int j = 0; j < boardSize; j++) {
+                    board.Cells[i, j].Children.Clear();
+                    if (((i + j) % 2) == 0)
+                    {
+                        board.Cells[i, j].Background = new SolidColorBrush(
+                            Color.FromRgb(
+                                Convert.ToByte(0xF1), // Red component
+                                Convert.ToByte(0xE0), // Green component
+                                Convert.ToByte(0xC0)  // Blue component
+                            )
+                        );
+
+                    }
+                    else
+                    {
+                        board.Cells[i, j].Background = new SolidColorBrush(
+                            Color.FromRgb(
+                                Convert.ToByte(0x5D), // Red component
+                                Convert.ToByte(0x99), // Green component
+                                Convert.ToByte(0x48)  // Blue component
+                            )
+                        );
+                    }
+                }
+            }
+            board.Cells[startX, startY].Background = new SolidColorBrush(Colors.Blue);
+            AddStartName();
+            int cachChay = Int32.Parse(LuaChonTextBox.Text);
+            KhoiChayConNgua(cachChay);
         }
 
         private void KhoiTaoBanCo(int size)
@@ -136,13 +323,13 @@ namespace KnightTour
 
         }
 
-        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        private void ResetChessBoard()
         {
-            // Xử lý khi nhấn nút Reset
             ChessboardGrid.Children.Clear();
-            ChessboardSizeTextBox.Text = "";
-            StartPointXTextBox.Text = "";
-            StartPointYTextBox.Text = "";
+            ChessboardGrid.ColumnDefinitions.Clear();
+            ChessboardGrid.RowDefinitions.Clear();
+            ansList = new List<int[,]>();
         }
+
     }
 }
