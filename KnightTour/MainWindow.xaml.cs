@@ -64,9 +64,9 @@ namespace KnightTour
         }
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            boardSize = Int32.Parse(ChessboardSizeComboBox.Text);
-            startX = Int32.Parse(StartPointXComboBox.Text);
-            startY = Int32.Parse(StartPointYComboBox.Text);
+            boardSize = Int32.Parse(ChessboardSizeTextBox.Text);
+            startX = Int32.Parse(StartPointXTextBox.Text);
+            startY = Int32.Parse(StartPointYTextBox.Text);
             board = new Board(boardSize);
             visited = new int[boardSize, boardSize];
             visited[startX, startY] = -1;
@@ -140,9 +140,9 @@ namespace KnightTour
         {
             // Xử lý khi nhấn nút Reset
             ChessboardGrid.Children.Clear();
-            ChessboardSizeComboBox.Text = "";
-            StartPointXComboBox.Text = "";
-            StartPointYComboBox.Text = "";
+            ChessboardSizeTextBox.Text = "";
+            StartPointXTextBox.Text = "";
+            StartPointYTextBox.Text = "";
         }
     }
 }
