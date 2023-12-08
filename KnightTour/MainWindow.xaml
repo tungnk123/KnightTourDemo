@@ -275,6 +275,7 @@
             <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                 <ToggleButton
                     Width="60"
+                    x:Name="SoundToggle"
                     IsChecked="True"
                     Style="{StaticResource MaterialDesignSwitchToggleButton}"
                     ToolTip="MaterialDesignSwitchToggleButton with Custom Track Background">

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Media;
 
 namespace KnightTour
 {
@@ -17,11 +18,13 @@ namespace KnightTour
         static int[] rowDir = { 2, 1, -1, -2, -2, -1, 1, 2 };
         static int[] colDir = { 1, 2, 2, 1, -1, -2, -2, -1 };
         public List<int[,]> ansList;
+        private SoundPlayer soundPlayer;
         public MainWindow()
         {
             InitializeComponent();
             board = new Board(boardSize);
             ansList = new List<int[,]>();
+            soundPlayer = new SoundPlayer("Resources/sound.wav");
         }
 
         public void ChayMaDiTuan(int i, int curRow, int curCol, int n, int[,] visited)
@@ -97,9 +100,11 @@ namespace KnightTour
                         break;
                     }
                     int[] toaDoTiepTheo = SearchToaDo(i + 1, dapAnThuI);
+                    board.Cells[toaDoTiepTheo[0], toaDoTiepTheo[1]].Background = new SolidColorBrush(Colors.Red);
                     textBlock.Text = $"Bước {i}:    Đi từ ({toaDoHienTai[0]}, {toaDoHienTai[1]}) đến ({toaDoTiepTheo[0]}, {toaDoTiepTheo[1]})";
                     ResultStackPanel.Children.Add(textBlock);
                     i++;
+                    PlayChessMoveSound();
                     await Task.Delay(500);
                 }
             }
@@ -329,6 +334,21 @@ namespace KnightTour
             ChessboardGrid.ColumnDefinitions.Clear();
             ChessboardGrid.RowDefinitions.Clear();
             ansList = new List<int[,]>();
+        }
+
+        private void PlayChessMoveSound()
+        {
+            try
+            {
+                if (SoundToggle.IsChecked == true)
+                {
+                    soundPlayer.Play();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error playing sound: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
     }
