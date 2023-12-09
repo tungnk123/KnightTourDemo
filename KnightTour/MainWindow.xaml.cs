@@ -197,11 +197,16 @@ namespace KnightTour
                 //board.Cells[startX, startY].Background = new SolidColorBrush(Colors.Blue);
                 AddStartName();
                 ChayMaDiTuan(1, startX, startY, boardSize, visited);
+                
                 if (ansList.Count < 1000)
                 {
                     CachChayTextBox.Text = "Có tất cả " + ansList.Count + " cách chạy";
                 }
                 else
+                {
+                    CachChayTextBox.Text = "Đã chạy được " + ansList.Count + " cách chạy";
+                }
+                if (boardSize >= 8)
                 {
                     CachChayTextBox.Text = "Đã chạy được " + ansList.Count + " cách chạy";
                 }
